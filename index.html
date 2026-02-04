@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UoG Leader Election</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f4f7f6; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; }
+        .screen { display: none; }
+        .active { display: block; }
+        label { display: block; text-align: left; margin-top: 15px; font-weight: bold; color: #5f6368; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #dadce0; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .primary-btn { background-color: #1a73e8; color: white; }
+        .result-btn { background-color: #34a853; color: white; margin-top: 15px; }
+        .error-msg { color: #d93025; font-size: 14px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div id="login-screen" class="screen active">
+        <h2>Student Login</h2>
+        <p style="font-size: 14px; color: #70757a;">Please enter your official ID (e.g., GUR/XXXXX/17)</p>
+        <input type="text" id="studentId" placeholder="Enter ID Number">
+        <div id="login-error" class="error-msg">You are not in the authorized voters list!</div>
+        <button class="primary-btn" onclick="checkAuthorization()">Login to Vote</button>
+    </div>
+
+    <div id="voting-screen" class="screen">
+        <h2>Cast Your Vote</h2>
+        <label>Female Candidate:</label>
+        <select id="female-choice">
+            <option value="LIYA MEHARI">LIYA MEHARI</option>
+            <option value="BETELHEM DEMOZ BAYE">BETELHEM DEMOZ BAYE</option>
+            <option value="MERON MELESE">MERON MELESE</option>
+            <option value="HAREGEWEYENE MISGANAW">HAREGEWEYENE MISGANAW</option>
+            <option value="HADYA AHIMED BIRHAN">HADYA AHIMED BIRHAN</option>
+            <option value="BEZAWIT WORKU GENETU">BEZAWIT WORKU GENETU</option>
+            <option value="ETSEGENET MELKAMU">ETSEGENET MELKAMU</option>
+        </select>
+
+        <label>Male Candidate:</label>
+        <select id="male-choice">
+            <option value="TADIE MULAT BELAY">TADIE MULAT BELAY</option>
+            <option value="ERMIYAS SIMACHEW ATINAF">ERMIYAS SIMACHEW ATINAF</option>
+            <option value="CHERNET ADUGNA ENYEW">CHERNET ADUGNA ENYEW</option>
+            <option value="BIRHAN TADESSE AMARE">BIRHAN TADESSE AMARE</option>
+            <option value="YALALEM WAGAYE KINDNEW">YALALEM WAGAYE KINDNEW</option>
+            <option value="SOLOMON WORKU AWOKE">SOLOMON WORKU AWOKE</option>
+            <option value="EYOB KIBROM TETEMKE">EYOB KIBROM TETEMKE</option>
+            <option value="SHAMBEL ABEJE ABIYE">SHAMBEL ABEJE ABIYE</option>
+            <option value="ASEFA CHALIE BABIL">ASEFA CHALIE BABIL</option>
+            <option value="ELYAS GELAW MELESE">ELYAS GELAW MELESE</option>
+            <option value="AMANUEL AYINEGIDA MESELE">AMANUEL AYINEGIDA MESELE</option>
+            <option value="AKLILEMARYAM ADANE MESEKERE">AKLILEMARYAM ADANE MESEKERE</option>
+            <option value="YONATAN KIBIREAB ASMELASH">YONATAN KIBIREAB ASMELASH</option>
+            <option value="EYOB LAKEMARIAM ASRIE">EYOB LAKEMARIAM ASRIE</option>
+            <option value="FEKADU ADERAJEW TESFA">FEKADU ADERAJEW TESFA</option>
+            <option value="DAGMAWI YOHANS ATAKILT">DAGMAWI YOHANS ATAKILT</option>
+            <option value="AMLAKIE GEREMEW MESELE">AMLAKIE GEREMEW MESELE</option>
+            <option value="BINIAM HAILU TIKUYE">BINIAM HAILU TIKUYE</option>
+            <option value="BINIYAM YIMEN TILAHUN">BINIYAM YIMEN TILAHUN</option>
+            <option value="SOLOMON MEBRATU YALEW">SOLOMON MEBRATU YALEW</option>
+            <option value="MAMUSH WONDU MELESE">MAMUSH WONDU MELESE</option>
+            <option value="AMARE ABUNIE ATAKLITIE">AMARE ABUNIE ATAKLITIE</option>
+            <option value="BERNABAS EYAYU TIGAB">BERNABAS EYAYU TIGAB</option>
+            <option value="SEWUNET TESFAYE GELANEH">SEWUNET TESFAYE GELANEH</option>
+            <option value="SIRAJ HUSSEN SADIK">SIRAJ HUSSEN SADIK</option>
+            <option value="ELSHADAY TESFAHUN HAILE">ELSHADAY TESFAHUN HAILE</option>
+            <option value="HABTEMARIAM YIMENU SISAY">HABTEMARIAM YIMENU SISAY</option>
+            <option value="BAWKET LIJALEM">BAWKET LIJALEM</option>
+            <option value="ABEL TEKLISH GEBREEYESUS">ABEL TEKLISH GEBREEYESUS</option>
+            <option value="TEWODROS MINALE AWOKE">TEWODROS MINALE AWOKE</option>
+            <option value="HAILEMARIAM BELAY FELEKE">HAILEMARIAM BELAY FELEKE</option>
+            <option value="SHEGASEW AZIZIE DILNESA">SHEGASEW AZIZIE DILNESA</option>
+            <option value="FASIL ESHETE CHAKLIE">FASIL ESHETE CHAKLIE</option>
+        </select>
+
+        <button class="primary-btn" id="submit-vote-btn" onclick="submitVote()">Submit Vote</button>
+    </div>
+
+    <div id="success-screen" class="screen">
+        <h2 style="color: #188038;">Vote Recorded! ✅</h2>
+        <p id="success-msg">Processing your vote...</p>
+        <button class="result-btn" id="view-result-btn" style="display:none;" onclick="window.location.href='result.html'">
+            📊 View Live Results
+        </button>
+        <button style="margin-top:10px;" onclick="location.reload()">Exit</button>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxwa9W-kbVANidUJH7P-Cty_IvR4zE5W5R1gAEWLWTMbZPdtXZ-15F9TsYFy94fxenh9g/exec'; // *** እዚህ ጋር ያንተን ሊንክ ማረጋገጥ አትርሳ ***
+
+    const validVoters = ["GUR/01966/15", "GUR/01095/17", "GUR/00660/17", "GUR/00446/17", 
+    "GUR/01910/17", "GUR/02845/17", "GUR/00669/17", "GUR/00399/17", "GUR/00408/17", "GUR/02699/17",
+     "GUR/00816/17", "GUR/02720/17", "GUR/00833/17", "GUR/00379/17", "GUR/02758/17", "GUR/00620/17",
+      "GUR/00809/17", "GUR/00300/17", "GUR/01341/17", "GUR/01977/17", "GUR/01971/17", "GUR/02811/17",
+       "GUR/02725/17", "GUR/00621/17", "GUR/00688/17", "GUR/01158/17", "GUR/01335/17", "GUR/00288/17",
+        "GUR/00391/17", "GUR/00395/17", "GUR/00832/17", "GUR/01203/17", "GUR/01659/17", "GUR/00883/17",
+         "GUR/01191/17", "GUR/01286/17", "GUR/00988/17", "GUR/01326/17", "GUR/00598/17", "GUR/01263/17", 
+         "GUR/01330/17", "GUR/01257/17", "GUR/01259/17", "GUR/00604/17", "GUR/01300/17", "GUR/00724/17", 
+         "GUR/01652/17", "GUR/01664/17", "GUR/02192/17", "GUR/02883/17", "GUR/001341/18", "GUR/001751/18",
+          "GUR/02603/15", "GUR/00056/18"];
+
+    function checkAuthorization() {
+        const id = document.getElementById('studentId').value.trim();
+        const errorDiv = document.getElementById('login-error');
+        
+        if(validVoters.includes(id)) {
+            errorDiv.style.display = 'none';
+            showScreen('voting-screen');
+        } else {
+            errorDiv.style.display = 'block';
+        }
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    async function submitVote() {
+    const id = document.getElementById('studentId').value;
+    const female = document.getElementById('female-choice').value;
+    const male = document.getElementById('male-choice').value;
+    const submitBtn = document.getElementById('submit-vote-btn');
+
+    // 1. በተኑን መቆለፍ (ደግሞ እንዳይነካ)
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Sending Vote...";
+
+    showScreen('success-screen'); // ወደ መጨረሻው ገጽ ይወስደዋል
+
+    try {
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify({ id, female, male })
+        });
+        const result = await response.text();
+
+        // 2. ከGoogle Sheet የመጣውን ምላሽ ማየት
+        if(result.trim() === "Already Voted") {
+            document.getElementById('success-msg').innerHTML = "<span style='color:red;'>Sorry, you have already voted!</span>";
+            document.getElementById('view-result-btn').style.display = 'none';
+        } else {
+            document.getElementById('success-msg').innerText = "Thank you! Your vote has been recorded.";
+            // 3. ድምፅ ሰጥቶ ሲጨርስ ውጤት ማሳያውን እዚህ ጋር ነው "Show" የምናደርገው
+            document.getElementById('view-result-btn').style.display = 'block';
+        }
+    } catch (error) {
+        // ኢንተርኔት ቢቋረጥ እንኳ ውጤቱን እንዲያዩ እድል ይሰጣል
+        document.getElementById('success-msg').innerText = "Vote sent! Check results below.";
+        document.getElementById('view-result-btn').style.display = 'block';
+    }
+}
+</script>
+
+</body>
+</html>
