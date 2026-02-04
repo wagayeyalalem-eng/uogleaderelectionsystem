@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Results</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; text-align: center; }
+        .result-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; margin: 20px auto; }
+        .candidate-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .votes { font-weight: bold; color: #1a73e8; }
+        h2 { color: #1a73e8; }
+        .loading { font-style: italic; color: #666; }
+    </style>
+</head>
+<body>
+
+    <div class="result-card">
+        <h2>📊 Election Results</h2>
+        <div id="status" class="loading">Loading results...</div>
+        
+        <h3>Female Candidates</h3>
+        <div id="female-results"></div>
+
+        <h3>Male Candidates</h3>
+        <div id="male-results"></div>
+        
+        <button onclick="fetchResults()" style="margin-top:20px; padding:10px; cursor:pointer;">Refresh Results</button>
+    </div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxwa9W-kbVANidUJH7P-Cty_IvR4zE5W5R1gAEWLWTMbZPdtXZ-15F9TsYFy94fxenh9g/exec'; // ያንተን URL እዚህ ተካ
+
+    async function fetchResults() {
+        try {
+            const response = await fetch(scriptURL);
+            const data = await response.json();
+            displayResults(data);
+            document.getElementById('status').innerText = "Last updated: " + new Date().toLocaleTimeString();
+        } catch (error) {
+            document.getElementById('status').innerText = "Error loading results.";
+        }
+    }
+
+    function displayResults(votes) {
+        let fCounts = {};
+        let mCounts = {};
+
+        votes.forEach(vote => {
+            // vote[1] = ሴት፣ vote[2] = ወንድ
+            fCounts[vote[1]] = (fCounts[vote[1]] || 0) + 1;
+            mCounts[vote[2]] = (mCounts[vote[2]] || 0) + 1;
+        });
+
+        renderList('female-results', fCounts);
+        renderList('male-results', mCounts);
+    }
+
+    function renderList(elementId, counts) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+        
+        // በድምፅ ብዛት ቅደም ተከተል ለማስቀመጥ
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
+        sorted.forEach(([name, count]) => {
+            container.innerHTML += `
+                <div class="candidate-row">
+                    <span>${name}</span>
+                    <span class="votes">${count} votes</span>
+                </div>`;
+        });
+    }
+
+    // ገጹ ሲከፈት ውጤቱን ያመጣል
+    fetchResults();
+</script>
+</body>
+</html>
